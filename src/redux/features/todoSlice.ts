@@ -5,7 +5,7 @@ type TTodo = {
   id: string;
   title: string;
   description: string;
-  isComplited?: boolean;
+  isCompleted?: boolean;
 };
 
 type TInitialState = {
@@ -21,14 +21,33 @@ const todoSlice = createSlice({
   initialState,
   reducers: {
     addTodo: (state, action: PayloadAction<TTodo>) => {
-      state.todos.push({ ...action.payload, isComplited: false });
+      state.todos.unshift({ ...action.payload, isCompleted: false });
     },
     removeTodo: (state, action: PayloadAction<string>) => {
       state.todos = state.todos.filter((item) => item.id !== action.payload);
     },
     toggleComplete: (state, action: PayloadAction<string>) => {
-      const task = state.todos.find((item) => item.id === action.payload);
-      task!.isComplited = !task?.isComplited;
+      const taskId = action.payload;
+      const taskIndex = state.todos.findIndex((item) => item.id === taskId);
+
+      if (taskIndex !== -1) {
+        const updatedTask = {
+          ...state.todos[taskIndex],
+          isCompleted: !state.todos[taskIndex].isCompleted,
+        };
+
+        // Remove the task from its current position
+        state.todos.splice(taskIndex, 1);
+
+        // Reorder the array based on the completion status
+        if (updatedTask.isCompleted) {
+          // Move completed tasks to the end
+          state.todos.push(updatedTask);
+        } else {
+          // Move incomplete tasks to the beginning
+          state.todos.unshift(updatedTask);
+        }
+      }
     },
   },
 });

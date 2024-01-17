@@ -6,10 +6,10 @@ type TTodoCardProps = {
   id: string;
   title: string;
   description: string;
-  isComplited?: boolean;
+  isCompleted?: boolean;
 };
 
-const TodoCard = ({ description, title, id, isComplited }: TTodoCardProps) => {
+const TodoCard = ({ description, title, id, isCompleted }: TTodoCardProps) => {
   const dispatch = useAppDispatch();
 
   const toggleState = () => {
@@ -20,14 +20,16 @@ const TodoCard = ({ description, title, id, isComplited }: TTodoCardProps) => {
   return (
     <div className="bg-white rounded-md flex justify-between items-center p-3 border">
       <input
+        // className={`${isCompleted ? "checked bg-red-700" : ""}`}
         onClick={toggleState}
         type="checkbox"
         name="complete"
         id="complete"
+        checked={isCompleted}
       />
       <p className="font-semibold">{title}</p>
       <div>
-        {isComplited ? (
+        {isCompleted ? (
           <p className="text-green-500">Done</p>
         ) : (
           <p className="text-red-500">Pending</p>
